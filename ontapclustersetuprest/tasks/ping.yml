@@ -1,0 +1,16 @@
+# --------------------------------------------------------------------------------------------------
+
+- name: "..... ping {{ ipaddress }}"
+
+  shell: "ping -c 1 -w 2 {{ ipaddress }}"
+
+  register: pingresult
+
+  failed_when: false
+  changed_when: false
+  
+- fail:
+    msg: "{{ failmsg }}"
+  when: pingresult.rc == failvalue
+
+# --------------------------------------------------------------------------------------------------

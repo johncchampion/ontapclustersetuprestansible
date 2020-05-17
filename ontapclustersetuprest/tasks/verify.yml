@@ -1,0 +1,40 @@
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... verify account variables
+
+  fail:
+    msg: "Missing account name and/or password"
+  when: username == none or password == none
+
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... verify network variables
+
+  fail:
+    msg: "Missing Network Settings - check clusterip, nodes, netmask, and gateway"
+  when: clusterip == none or nodes == none or cidrnetmask == none or gateway == none
+
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... verify cluster name
+
+  fail:
+    msg: "Missing Cluster Name - check clustername"
+  when: clustername == none
+
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... get node count
+
+  set_fact:
+    nodecount: "{{ nodes | length }}"
+
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... check node count
+
+  fail:
+    msg: "Invalid number of nodes ({{ nodecount }}) - must be 1 or 2 nodes only"
+  when: nodecount < '1' or nodecount > '2'
+
+# --------------------------------------------------------------------------------------------------

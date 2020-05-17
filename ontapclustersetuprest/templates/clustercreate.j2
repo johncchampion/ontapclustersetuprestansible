@@ -1,0 +1,51 @@
+{
+    "management_interface": {
+        "ip": {
+        "gateway": "{{ gateway }}",
+        "netmask": "{{ cidrnetmask }}",
+        "address": "{{ clusterip }}"
+        }
+    },
+    "name": "{{ clustername }}",
+{% if nodecount == '1' %}
+    "nodes": [ 
+        {
+        "management_interface": {
+            "ip": {
+            "address": "{{ nodes[0].nodeip }}"
+            }
+        },
+        "name": "{{ nodes[0].nodename }}"
+        }
+    ]
+{% else %}
+    "nodes": [ 
+        {
+        "management_interface": {
+            "ip": {
+            "address": "{{ nodes[0].nodeip }}"
+            }
+        },
+        "cluster_interface":{
+            "ip":{
+                "address": "{{ ciplist[0].cip }}"
+                }
+            },
+        "name": "{{ nodes[0].nodename }}"
+        },
+        {
+        "management_interface": {
+            "ip": {
+            "address": "{{ nodes[1].nodeip }}"
+            }
+        },
+        "cluster_interface":{
+            "ip":{
+                "address": "{{ ciplist[1].cip }}"
+                }
+            },
+        "name": "{{ nodes[1].nodename }}"
+        }
+    ]
+{% endif %}
+}

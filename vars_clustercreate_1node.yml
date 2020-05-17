@@ -1,0 +1,8 @@
+clustername: vsim
+username: admin
+password: "Netapp123!"
+clusterip: 192.168.43.113
+nodes: 
+  - { nodename: "{{ clustername }}-01", nodeip: "192.168.43.114" }
+cidrnetmask: 24
+gateway: 192.168.43.1

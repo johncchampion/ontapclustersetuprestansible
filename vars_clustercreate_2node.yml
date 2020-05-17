@@ -1,0 +1,9 @@
+clustername: fascluster
+username: admin
+password: "Netapp123!"
+clusterip: 10.10.10.13
+nodes: 
+  - { nodename: "{{ clustername }}-01", nodeip: "10.10.10.14" }
+  - { nodename: "{{ clustername }}-02", nodeip: "10.10.10.15" }
+cidrnetmask: 24
+gateway: 10.10.10.1

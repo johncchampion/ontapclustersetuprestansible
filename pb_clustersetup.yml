@@ -1,0 +1,35 @@
+---
+# ------------------------------------------------------------------------------------------
+#
+# ONTAP Cluster Setup
+#
+# -- Version 9.6 or later (requires REST API)
+# -- Single Node or Two Node Switchless Cluster (TNSC)
+# -- Requires node IPs configured and admin password set
+# -- Minimum settings for cluster setup - use NetApp Ansible modules for 
+#    remanider of configuration and provisioning
+# -- defaults/main.yml contains vars needed for role with example(s)
+#    make a separate file and set values - pass using -e "@filename"
+# -- Does not work with a 2-node simulator setup
+# -- Not tested on a switched cluster - only TNSC
+#    It does work for a single node simulator
+#
+# Usage Example:
+#
+#        ansible-playbook pb_clustersetup.yml -e "@vars_clustercreate.yml"
+#
+# ------------------------------------------------------------------------------------------
+
+- name: ONTAP Cluster Setup
+
+  hosts: localhost
+  gather_facts: no
+
+# ------------------------------------------------------------------------------------------
+
+  tasks:
+
+  - include_role:
+      name: ontapclustersetuprest
+
+# ------------------------------------------------------------------------------------------

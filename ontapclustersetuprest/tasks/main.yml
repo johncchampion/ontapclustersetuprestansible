@@ -1,0 +1,42 @@
+---
+##################################################################################################################
+
+- name: V E R I F Y  S E T T I N G S
+  include_tasks: verify.yml
+
+##################################################################################################################
+
+- name: P I N G  C L U S T E R
+  include_tasks: ping.yml
+  vars:
+    ipaddress: "{{ clusterip }}"
+    failvalue: 0
+    failmsg: "Cluster IP {{ clusterip }} In Use - Cluster Exists (?)"
+  when: clusterip != none
+
+##################################################################################################################
+
+- name: P I N G  N O D E (S)
+  include_tasks: ping.yml
+  with_items: "{{ nodes }}"
+  vars:
+    ipaddress: "{{ item.nodeip }}"
+    failvalue: 1
+    failmsg: "Node IP {{ item.nodeip }} Not Reachable"
+  when: nodes != none
+
+##################################################################################################################
+
+- name: G E T  C L U S T E R  I N T E R F A C E S (2-NODE ONLY)
+  include_tasks: nodeinfo.yml
+  when: nodecount == '2'
+
+##################################################################################################################
+
+- name: C R E A T E  C L U S T E R 
+  include_tasks: clustercreate.yml
+  vars:
+    urllink: "https://{{ nodes[0].nodeip }}/api/cluster"
+  when: clustername != none
+
+##################################################################################################################

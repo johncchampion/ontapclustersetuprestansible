@@ -1,0 +1,46 @@
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... create cluster '{{ clustername }}'
+
+  uri:
+    url: "{{ lookup('template', 'clustercreateurl.j2') }}"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body: "{{ lookup('template', 'clustercreate.j2') }}"
+    body_format: json
+    user: "{{ username }}"
+    password: "{{ password }}"
+    status_code: 202
+    validate_certs: False
+
+  register: clustercreate_response
+
+# --------------------------------------------------------------------------------------------------
+
+- name: .....monitor job ({{ clustercreate_response.json.job.uuid }}) until "success" or "failure"
+
+  uri:
+    url: "https://{{ nodes[0].nodeip }}{{ clustercreate_response.json.job._links.self.href }}"
+    method: GET
+    headers:
+      Content-Type: "application/json"
+    user: "{{ username }}"
+    password: "{{ password }}"
+    status_code: 200
+    validate_certs: False
+  register: job_response
+  until: job_response.json.state == "success" or job_response.json.state == "failure"
+  retries: 120
+  delay: 30
+
+# --------------------------------------------------------------------------------------------------
+
+- name: ..... show response if failure
+
+  fail:
+    msg: "{{ job_response }}"
+  when:
+    - job_response.json.state == "failure"
+
+# --------------------------------------------------------------------------------------------------
