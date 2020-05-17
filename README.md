@@ -8,10 +8,10 @@ The goal is to use a SINGLE ROLE using a vars file to accomplish the needed task
 The 'default/main.yml' is well commented, covering each var with a description, usage, and examples. Use this file to build a system-specific vars file for input and modify to suit your needs. If a variable is not set then the relevant task is not invoked. The 'defaults/main.yml' has most of the vars unset so they can be simply omitted from the provided vars input file - Ansible will use the default setting.
 
 ### Disclaimer
-The role and associated components are provided as-is and are intended to provide an example of utilizing the ONTAP collection in Ansible. Fully test in a non-production enviornment before implementing. Feel free to utilize/modify any portion of code for your specific needs.
+The role and associated components are provided as-is and are intended to provide an example of utilizing the ONTAP REST API with Ansible. Fully test in a non-production enviornment before implementing. Feel free to utilize/modify any portion of code for your specific needs.
 
 ### Notes
-* This role has only been tested against a Two Node Switchless Cluster (TNSC) which allows ONTAP to be 'aware' of the interconnects and assign link-locak (APIPA) addresses before cluster setup.  This has NOT been tested on a switched cluster so not sure if the same behavior will occur. Run the playbook with '-vvv' to see the output of the registered vars to see the returned JSON.
+* This role has only been tested against a Two Node Switchless Cluster (TNSC) which allows ONTAP to be 'aware' of the interconnects and assign link-locak (APIPA) addresses before cluster setup.  This has NOT been tested on a switched cluster so not sure if the same behavior will occur. Run the playbook with '-vvv' to see the output of the registered vars and returned JSON.
 * A 2-node ONTAP Simulator configuration is not supported. There is no switchless connection (or shared anything), so ONTAP does not automatically generate cluster interfaces.
 
 ### Requirements
@@ -24,6 +24,7 @@ The role and associated components are provided as-is and are intended to provid
 ### Dev/Test Environment
 * CentOS 8.1
 * Ansible 2.9.7
+* Python 3.6.8
 * netapp-lib 
 * FAS2552 running ONTAP v9.7P3 - Two Node Switchless Cluster
 * ONTAP Simulator 9.7
@@ -35,8 +36,8 @@ The role and associated components are provided as-is and are intended to provid
 
 ### Workflow
 1. Verify vars file settings before running tasks
-2. Ping the cluster IP address - if reachable the task will stop
-3. Ping each specified node - if NOT reachalbe the task will stop
+2. Ping the cluster IP address - if reachable the task will stop (assumes cluster exists)
+3. Ping each specified node - if NOT reachable the task will stop
 4. If a 2-node cluster, get the cluster interface IP addresses from node 1 
 5. Create the cluster - uses templates to build the URL and the JSON body (jinja2)
 6. Monitor the job until success or failure
@@ -51,6 +52,19 @@ The role and associated components are provided as-is and are intended to provid
       name: ontapclustersetuprest
 </pre>
 
+### Example vars file
+<pre>
+clustername: fascluster
+username: admin
+password: "Netapp123!"
+clusterip: 10.10.10.13
+nodes: 
+  - { nodename: "{{ clustername }}-01", nodeip: "10.10.10.14" }
+  - { nodename: "{{ clustername }}-02", nodeip: "10.10.10.15" }
+cidrnetmask: 24
+gateway: 10.10.10.1
+</pre>
+
 To pass a vars file to the playbook:
 
    **ansible-playbook pb_clustersetup.yml -e "@vars_clustersetup.yml"**
@@ -62,4 +76,4 @@ Development of this role is ongoing and new tasks are added regularly.
 
 Here's a list of tasks currently being worked on:
 * Use 'expect' to complete node setup and set 'admin' password - access through Service Processor(s) / Maintenace Menu / System Console
-* Research completing over serial console interface (but that'd require a direct connection from the Ansible controller or a serial-Ethernet solution)
+* Research serial console interface (would require a direct connection from the Ansible controller or a serial-Ethernet solution)
