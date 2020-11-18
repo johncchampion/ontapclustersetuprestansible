@@ -7,3 +7,6 @@ nodes:
   - { nodename: "{{ clustername }}-02", nodeip: "10.10.10.15" }
 cidrnetmask: 24
 gateway: 10.10.10.1
+serviceprocessors:
+  - { sp: "A", spip: "10.10.10.24" }
+  - { sp: "B", spip: "10.10.10.25" }

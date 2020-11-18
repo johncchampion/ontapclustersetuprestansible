@@ -16,12 +16,12 @@
 
 # --------------------------------------------------------------------------------------------------
 
-- name: ..... save node 1 cluster interface address
+- name: ..... retrieve node 1 cluster interface address
 
   set_fact:
     ciplist: "{{ ciplist | default([]) + [ {'nodeip': nodes[0].nodeip, 'cip': nodeinfo_response.json.records[1].cluster_interfaces[0].ip.address} ] }}"
 
-- name: ..... save node 2 cluster interface address
+- name: ..... retrieve node 2 cluster interface address
 
   set_fact:
     ciplist: "{{ ciplist + [ {'nodeip': nodes[1].nodeip, 'cip': nodeinfo_response.json.records[0].cluster_interfaces[0].ip.address} ] }}"

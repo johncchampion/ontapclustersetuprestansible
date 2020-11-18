@@ -134,3 +134,19 @@ cidrnetmask: 24
 gateway: 
 
 ################################################################################################
+# serviceprocessors
+# 
+#   - OPTIONAL
+#   - When specified, runs node setup on each node
+#   - Physical service processors MUST be configured with a matching IP address
+#   - Uses same cidrnetmask and gateway as cluster management
+#   - Leave BLANK to skip node setup and proceed with cluster setup
+#
+#   Example:
+#
+#               serviceprocessors:
+#                 - { sp: "A", nodeip: "10.10.10.24" }
+#                 - { sp: "B", nodeip: "10.10.10.25" }
+#
+################################################################################################
+serviceprocessors: 
